@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-trap t-d-uninstaller SIGINT SIGTERM EXIT QUIT
+set -euo pipefail
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 1>&2
    exit 1
@@ -8,8 +8,8 @@ function t-d-uninstaller {
     rm -rf $tmp_dir
     echo "Temporary directory uninstalled"
 }
+trap t-d-uninstaller SIGINT SIGTERM EXIT QUIT
 tmp_dir=$(mktemp -d -t pub_key-XXXXXX)
-set -euo pipefail
 echo $tmp_dir
 echo 'deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main'>/etc/apt/sources.list.d/google-chrome.list
 echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list
