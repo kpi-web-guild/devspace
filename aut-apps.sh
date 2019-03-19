@@ -4,12 +4,13 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 function t-d-uninstaller {
-rm -rf $tmp_dir
-echo "Temporary directory uninstalled"
-exit 1
+    rm -rf $tmp_dir
+    echo "Temporary directory uninstalled"
+    exit 1
 }
 tmp_dir=$(mktemp -d -t pub_key-XXXXXX)
-trap t-d-uninstaller SIGINT SIGTERM
+trap t-d-uninstaller SIGINT SIGTERM EXIT QUIT
+set -euo pipefail
 echo $tmp_dir
 echo 'deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main'>/etc/apt/sources.list.d/google-chrome.list
 echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list
@@ -19,4 +20,3 @@ install -o root -g root -m 644 $tmp_dir/microsoft.gpg /etc/apt/trusted.gpg.d/
 apt update
 echo 'Start install'
 apt-get -y install google-chrome-stable git apt-transport-https code
-t-d-uninstaller
