@@ -1,0 +1,37 @@
+---
+- name: Install OS-level apps
+  hosts: all
+  become: yes
+  tasks:
+  - name: Add Google Chrome key
+    apt_key:
+      url: https://dl-ssl.google.com/linux/linux_signing_key.pub
+      state: present
+  - name: Add Google Chrome directory
+    apt_repository:
+      repo: "{{ item }}"
+      state: present
+    loop:
+    - deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
+    - deb http://dl.google.com/linux/chrome/deb/ stable main
+  - name: Add Microsoft key
+    apt_key:
+      url: https://packages.microsoft.com/keys/microsoft.asc
+      state: present
+  - name: Add vscode directory
+    apt_repository:
+      repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+      state: present
+  - name: Install vscode depts
+    apt:
+      update_cache: yes
+      name:
+      - software-properties-common
+      - apt-transport-https
+  - name: Install apps
+    apt:
+      update_cache: yes
+      name:
+      - google-chrome-stable
+      - git
+      - code
