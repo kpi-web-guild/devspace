@@ -22,7 +22,7 @@
     apt_repository:
       repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
       state: present
-  - name: Install vscode depts
+  - name: Install vscode deps
     apt:
       update_cache: yes
       name:
